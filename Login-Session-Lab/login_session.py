@@ -10,12 +10,20 @@ def home():
 		if request.method == 'GET':
 			return render_template('home.html')
 		else:
+			
 			name = request.form['name']
 			age = request.form['age']
 			quote = request.form['quote']
-			if type(age) == int and type(name) == str and type(quote) == str:
-				return render_template('thanks.html', n = name, q = quote, a = age)
-			else:
+			login_session["name"] = name
+			login_session["age"] = age
+			login_session["quote"] = quote
+			try:
+				age = int(age)
+				if type(age) == int and type(name) == str and type(quote) == str:
+					return render_template('thanks.html', n = name, q = quote, a = age)
+				else:
+					raise TypeError("")
+			except:
 				raise TypeError("There was a problem.")
 	except:
 		return render_template('error.html')
@@ -29,8 +37,7 @@ def error():
 
 @app.route('/display')
 def display():
-
-	return render_template('display.html', ) # What variables are needed?
+	return render_template('display.html', n = login_session["name"], q = login_session["quote"], a = login_session["age"]) # What variables are needed?
 
 
 @app.route('/thanks')
