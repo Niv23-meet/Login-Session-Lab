@@ -4,10 +4,21 @@ from flask import session as login_session
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'super-secret-key'
 
-@app.route('/', ) # What methods are needed?
+@app.route('/', methods = ['GET', 'POST']) # What methods are needed?
 def home():
-	
-	return render_template('home.html')
+	try:
+		if request.method == 'GET':
+			return render_template('home.html')
+		else:
+			name = request.form['name']
+			age = request.form['age']
+			quote = request.form['quote']
+			if type(age) == int and type(name) == str and type(quote) == str:
+				return render_template('thanks.html', n = name, q = quote, a = age)
+			else:
+				raise TypeError("There was a problem.")
+	except:
+		return render_template('error.html')
 
 
 @app.route('/error')
